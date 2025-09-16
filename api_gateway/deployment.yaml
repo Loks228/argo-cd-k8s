@@ -21,3 +21,29 @@ spec:
         image: kolyaacr.azurecr.io/api_gateway:latest
         ports:
         - containerPort: 8000
+        env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGHOST
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGUSER
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGPASSWORD
+        - name: PGPORT
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGPORT
+        - name: PGDATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGDATABASE
