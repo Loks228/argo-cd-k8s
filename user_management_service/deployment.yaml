@@ -1,0 +1,49 @@
+# user_management_service/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-management-service-deployment
+  namespace: user-management
+  labels:
+    app: user-management-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-management-service
+  template:
+    metadata:
+      labels:
+        app: user-management-service
+    spec:
+      containers:
+      - name: user-management-service
+        image: kolyaacr.azurecr.io/user_management_service:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGHOST
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGUSER
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGPASSWORD
+        - name: PGPORT
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGPORT
+        - name: PGDATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: PGDATABASE
