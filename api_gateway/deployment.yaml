@@ -47,3 +47,19 @@ spec:
             secretKeyRef:
               name: db-credentials
               key: PGDATABASE
+        # Azure Blob Storage configuration
+        - name: Azure-account
+          valueFrom:
+            secretKeyRef:
+              name: azure-storage
+              key: Azure-account
+        - name: Azure-key
+          valueFrom:
+            secretKeyRef:
+              name: azure-storage
+              key: Azure-key
+        - name: Azure-container
+          valueFrom:
+            secretKeyRef:
+              name: azure-storage
+              key: Azure-container
