@@ -6,10 +6,12 @@ data:
   config.yaml: |
     server:
       http_listen_port: 3100
+
     ingester:
       wal:
         enabled: true
         dir: /var/loki/wal
+
     schema_config:
       configs:
         - from: "2024-01-01"
@@ -19,8 +21,13 @@ data:
           index:
             prefix: index_
             period: 24h
-          index_tables_dir: /var/loki/index   # <-- добавляем локальный путь для индексов
+
     storage_config:
+      boltdb_shipper:
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/cache
+        shared_store: azure
+
       azure:
         account_name: ${AZURE_STORAGE_ACCOUNT}
         account_key: ${AZURE_STORAGE_KEY}
