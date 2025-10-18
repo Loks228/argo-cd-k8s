@@ -3,9 +3,24 @@ kind: ConfigMap
 metadata:
   name: loki-config
 data:
-    config.yaml: |
-        storage_config:
-            azure:
-                account_name: {{ .Values.commonEnv.AZURE_STORAGE_ACCOUNT }}
-                account_key: {{ .Values.commonEnv.AZURE_STORAGE_KEY }}
-                container_name: {{ .Values.commonEnv.AzureContainer }}
+  config.yaml: |
+    server:
+      http_listen_port: 3100
+    ingester:
+      wal:
+        enabled: true
+        dir: /var/loki/wal
+    schema_config:
+      configs:
+        - from: "2024-01-01"
+          store: boltdb-shipper
+          object_store: azure
+          schema: v13
+          index:
+            prefix: index_
+            period: 24h
+    storage_config:
+      azure:
+        account_name: ${AZURE_STORAGE_ACCOUNT}
+        account_key: ${AZURE_STORAGE_KEY}
+        container_name: ${AzureContainer}
