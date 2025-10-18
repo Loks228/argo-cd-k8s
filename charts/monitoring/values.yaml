@@ -38,7 +38,7 @@ config:
           index:
             prefix: index_
             period: 24h
-          index_tables_dir: /var/loki/index   # <-- добавляем локальный путь для индексов
+            index_tables_dir: /var/loki/index   # <-- добавляем локальный путь для индексов
     storage_config:
       azure:
         account_name: ${AZURE_STORAGE_ACCOUNT}
