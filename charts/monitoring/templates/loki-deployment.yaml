@@ -15,19 +15,29 @@ spec:
         app: loki
     spec:
       serviceAccountName: loki-sa
-      containers:
-        - name: loki
-          image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag }}"
-          # Use envsubst to replace ${VAR} placeholders in /etc/loki/config.yaml before starting loki binary
+      initContainers:
+        - name: init-loki-config
+          image: alpine:3.18
           command:
             - /bin/sh
             - -c
             - |
               set -e
-              # substitute env vars into config and start loki
+              apk add --no-cache gettext
               mkdir -p /var/loki/config
               envsubst < /etc/loki/config.yaml > /var/loki/config/config.generated.yaml
-              exec /usr/bin/loki -config.file=/var/loki/config/config.generated.yaml
+          volumeMounts:
+            - name: loki-config
+              mountPath: /etc/loki
+              readOnly: true
+            - name: loki-config-generated
+              mountPath: /var/loki/config
+      containers:
+        - name: loki
+          image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag }}"
+          command:
+            - /usr/bin/loki
+            - -config.file=/var/loki/config/config.generated.yaml
           ports:
             - containerPort: {{ .Values.service.targetPort | default 3100 }}
           env:
