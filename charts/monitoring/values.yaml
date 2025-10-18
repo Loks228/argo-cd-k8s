@@ -23,24 +23,24 @@ service:
   targetPort: 3100
 
 config:
-  server:
-    http_listen_port: 3100
-  ingester:
-    wal:
-      enabled: true
-      dir: /var/loki/wal
-  schema_config:
-    configs:
-      - from: 2024-01-01
-        store: boltdb-shipper
-        object_store: azure
-        schema: v12
-        index:
-          prefix: index_
-          period: 24h
-  storage_config:
-    azure:
-      account_name: ${AZURE_STORAGE_ACCOUNT}
-      account_key: ${AZURE_STORAGE_KEY}
-      container_name: ${AzureContainer}
+    server:
+      http_listen_port: 3100
+    ingester:
+      wal:
+        enabled: true
+        dir: /var/loki/wal
+    schema_config:
+      configs:
+        - from: "2024-01-01"
+          store: boltdb-shipper
+          object_store: azure
+          schema: v12
+          index:
+            prefix: index_
+            period: 24h
+    storage_config:
+      azure:
+        account_name: ${AZURE_STORAGE_ACCOUNT}
+        account_key: ${AZURE_STORAGE_KEY}
+        container_name: ${AzureContainer}
 
