@@ -57,9 +57,9 @@ services:
         # Если ваш шаблон пробрасывает ее в ENV как AZURE_CONTAINER, 
         # то можно использовать {{ .Values.commonEnv.AZURE_CONTAINER }} 
         # (или просто передать имя контейнера, если оно не секретно)
-        chunks: {{ .Values.commonEnv.AzureContainer }} # Например: my-loki-chunks
-        ruler: {{ .Values.commonEnv.AzureContainer }}
-        admin: {{ .Values.commonEnv.AzureContainer }}
+        chunks: AzureContainer # Например: my-loki-chunks
+        ruler: AzureContainer
+        admin: AzureContainer
       azure:
         # Этот блок остается пустым. Loki автоматически найдет AZURE_STORAGE_ACCOUNT
         # и AZURE_STORAGE_KEY в переменных окружения, проброшенных вашим шаблоном.
