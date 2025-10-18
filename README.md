@@ -130,53 +130,53 @@ git push origin --force --all
 ### Kubernetes Secret: пример
 
 ```yaml
+{{- if .Values.services }}
+{{- range $name, $svc := .Values.services }}
+---
 apiVersion: v1
 kind: Secret
 metadata:
   name: db-credentials
-  namespace: user-management
+  namespace: {{ $svc.namespace | quote }}
 type: Opaque
 stringData:
-  PGHOST: "minemap2.postgres.database.azure.com"
-  PGPORT: "5432"
-  PGUSER: "minemap"
-  PGPASSWORD: "<REDACTED>"
-  PGDATABASE: "postgres"
+  PGHOST: {{ $.Values.commonEnv.PGHOST | quote }}
+  PGPORT: {{ $.Values.commonEnv.PGPORT | quote }}
+  PGUSER: {{ $.Values.commonEnv.PGUSER | quote }}
+  PGPASSWORD: {{ $.Values.commonEnv.PGPASSWORD | quote }}
+  PGDATABASE: {{ $.Values.commonEnv.PGDATABASE | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-storage
+  namespace: {{ $svc.namespace | quote }}
+type: Opaque
+stringData:
+  Azure-account: {{ $.Values.commonEnv.AzureAccount | quote }}
+  Azure-key: {{ $.Values.commonEnv.AzureKey | quote }}
+  Azure-container: {{ $.Values.commonEnv.AzureContainer | quote }}
+{{- end }}
+{{- end }}
 ```
 
 Применить:
 
 ```bash
-kubectl apply -f secret.yaml
-kubectl rollout restart deployment/<deployment-name> -n <namespace>
+# проверить чар
+helm lint ./secrets-chart
+
+# посмотреть рендер (использует существующий файл charts/values-secret.yaml)
+helm template secrets-manual ./secrets-chart -f charts/values-secret.yaml | less
+
+# установить/обновить релиз (создаст секреты в namespaces из values)
+helm upgrade --install secrets-manual ./secrets-chart -f charts/values-secret.yaml --namespace default --wait
 ```
 
 ---
 
-# 5. ArgoCD + приватный репозиторий (SSH)
 
-**Паттерн:** безопасно подключить ArgoCD к приватному Git — через SSH ключ.
-
-**Шаги (упрощённо):**
-
-1. Сгенерировать SSH key (на машине, где ты управляешь):
-
-   ```bash
-   ssh-keygen -t ed25519 -C "argocd-repo" -f ~/.ssh/argocd_repo
-   ```
-2. Публичный ключ (`~/.ssh/argocd_repo.pub`) добавить в Git-провайдера (GitHub/GitLab) как Deploy key (Read-only или Read/Write по необходимости).
-3. Приватный ключ добавить в ArgoCD: через веб UI (Settings → Repositories → Add) — выбираешь SSH и вставляешь приватный ключ; или через argocd CLI:
-
-   ```bash
-   argocd repo add git@github.com:org/repo.git --ssh-private-key-path ~/.ssh/argocd_repo
-   ```
-4. Убедиться, что ArgoCD видит репо и синхронизирует приложения.
-
-**Альтернатива:** создать Kubernetes secret с приватным ключом и дать argocd-server доступ к нему.
-
----
-
-# 6. Проверки подключения к Postgres (psql / SQLAlchemy async)
+# 5. Проверки подключения к Postgres (psql / SQLAlchemy async)
 
 ### psql с локальной машины (пример, без пароля в командной строке):
 
