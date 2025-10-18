@@ -4,8 +4,8 @@ metadata:
   name: loki-config
 data:
     config.yaml: |
-    storage_config:
-        azure:
-        account_name: {{ .Values.commonEnv.AZURE_STORAGE_ACCOUNT }}
-        account_key: {{ .Values.commonEnv.AZURE_STORAGE_KEY }}
-        container_name: {{ .Values.commonEnv.AzureContainer }}
+        storage_config:
+            azure:
+                account_name: {{ .Values.commonEnv.AZURE_STORAGE_ACCOUNT }}
+                account_key: {{ .Values.commonEnv.AZURE_STORAGE_KEY }}
+                container_name: {{ .Values.commonEnv.AzureContainer }}
