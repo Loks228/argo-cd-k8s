@@ -25,8 +25,9 @@ spec:
             - |
               set -e
               # substitute env vars into config and start loki
-              envsubst < /etc/loki/config.yaml > /etc/loki/config.generated.yaml
-              exec /usr/bin/loki -config.file=/etc/loki/config.generated.yaml
+              mkdir -p /var/loki/config
+              envsubst < /etc/loki/config.yaml > /var/loki/config/config.generated.yaml
+              exec /usr/bin/loki -config.file=/var/loki/config/config.generated.yaml
           ports:
             - containerPort: {{ .Values.service.targetPort | default 3100 }}
           env:
@@ -43,6 +44,8 @@ spec:
             - name: loki-config
               mountPath: /etc/loki
               readOnly: true
+            - name: loki-config-generated
+              mountPath: /var/loki/config
             - name: loki-wal
               mountPath: /var/loki/wal
             - name: loki-index
@@ -53,6 +56,8 @@ spec:
         - name: loki-config
           configMap:
             name: {{ .Values.configMap.name | default "loki-config" }}
+        - name: loki-config-generated
+          emptyDir: {}
         - name: loki-wal
           emptyDir: {}
         - name: loki-index
