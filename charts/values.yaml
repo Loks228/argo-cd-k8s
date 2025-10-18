@@ -6,6 +6,9 @@ commonEnv:
     - PGPASSWORD
     - PGPORT
     - PGDATABASE
+    - AZURE_STORAGE_ACCOUNT
+    - AZURE_STORAGE_KEY
+    - AzureContainer
 
 services:
   api-gateway:
@@ -35,4 +38,32 @@ services:
     image: kolyaacr.azurecr.io/user_management_service:latest
     port: 8000
     serviceType: ClusterIP
+
+  loki:
+    namespace: loki
+    replicas: 1
+    image: grafana/loki:2.8.2
+    port: 3100
+    serviceType: ClusterIP
+    
+    # Конфигурация Loki, специфичная для чарта
+    target: "simple-scalable"
+    commonConfig:
+      replication_factor: 1
+    storage:
+      type: azure
+      bucketNames:
+        # Здесь мы используем переменную AzureContainer из вашего commonEnv.
+        # Если ваш шаблон пробрасывает ее в ENV как AZURE_CONTAINER, 
+        # то можно использовать {{ .Values.commonEnv.AZURE_CONTAINER }} 
+        # (или просто передать имя контейнера, если оно не секретно)
+        chunks: {{ .Values.commonEnv.AzureContainer }} # Например: my-loki-chunks
+        ruler: {{ .Values.commonEnv.AzureContainer }}
+        admin: {{ .Values.commonEnv.AzureContainer }}
+      azure:
+        # Этот блок остается пустым. Loki автоматически найдет AZURE_STORAGE_ACCOUNT
+        # и AZURE_STORAGE_KEY в переменных окружения, проброшенных вашим шаблоном.
+        
+    # extraEnv:
+    #   Блок НЕ НУЖЕН, так как его генерирует ваш универсальный шаблон Deployment!
 

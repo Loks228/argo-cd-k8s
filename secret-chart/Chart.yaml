@@ -1,5 +1,5 @@
 apiVersion: v2
-name: minemap-secrets-manual
+name: secrets-manual
 description: "Helm chart to deploy secrets manually (not managed by ArgoCD)"
 type: application
 version: 0.1.0
