@@ -1,26 +1,43 @@
-# charts/monitoring/values.yaml
-
-# 🔑 Секреты для проброса (их имена)
-# Это список ключей, который используется циклом 'range' в Deployment
 secretEnvKeys:
   - AZURE_STORAGE_ACCOUNT
   - AZURE_STORAGE_KEY
-  - AzureContainer # Ключ, содержащий имя контейнера
+  - AZURE_CONTAINER
 
-# Конфигурация Loki
+secret:
+  name: db-credentials
+
+configMap:
+  name: loki-config
+
+
 loki:
-  image: grafana/loki:2.8.2
-  replicaCount: 1
-  serviceType: LoadBalancer 
+  replicas: 1
+  image:
+    repository: "grafana/loki"
+    tag: "2.8.2"
+service:
+  type: LoadBalancer
   port: 3100
-  secretName: db-credentials # Имя Kubernetes Secret, который вы деплоите
-  
-  # 🔑 Добавьте сюда список ключей, который ищет ваш шаблон
-  secretEnvKeys:
-    - AZURE_STORAGE_ACCOUNT
-    - AZURE_STORAGE_KEY
-    - AzureContainer
-  
-  storage:
-    type: azure
-    # ...
+  targetPort: 3100
+
+config:
+  server:
+    http_listen_port: 3100
+  ingester:
+    wal:
+      enabled: true
+      dir: /var/loki/wal
+  schema_config:
+    configs:
+      - from: 2024-01-01
+        store: boltdb-shipper
+        object_store: azure
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h
+  storage_config:
+    azure:
+      account_name: "$AZURE_STORAGE_ACCOUNT"
+      account_key: "$AZURE_STORAGE_KEY"
+      container_name: "$AZURE_CONTAINER"
