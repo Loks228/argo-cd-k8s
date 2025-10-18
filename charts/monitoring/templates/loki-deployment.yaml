@@ -22,10 +22,27 @@ spec:
             - /bin/sh
             - -c
             - |
-              set -e
-              apk add --no-cache gettext
+              set -euo pipefail
+              apk add --no-cache gettext >/dev/null 2>&1 || true
+              # validate required env keys passed from Secret
+              MISSING=0
+{{- if .Values.commonEnv.envKeys }}
+{{- range $i, $key := .Values.commonEnv.envKeys }}
+              if [ -z "${{ $key }:-}" ]; then
+                echo "ERROR: env '{{ $key }}' is empty or missing"
+                MISSING=1
+              fi
+{{- end }}
+{{- end }}
+              if [ "$MISSING" -eq 1 ]; then
+                echo "One or more required env vars are missing, aborting initContainer"
+                exit 2
+              fi
               mkdir -p /var/loki/config
               envsubst < /etc/loki/config.yaml > /var/loki/config/config.generated.yaml
+              echo "----- GENERATED LOKI CONFIG BEGIN -----"
+              sed -n '1,200p' /var/loki/config/config.generated.yaml || true
+              echo "----- GENERATED LOKI CONFIG END -----"
           volumeMounts:
             - name: loki-config
               mountPath: /etc/loki
@@ -51,9 +68,6 @@ spec:
 {{- end }}
 {{- end }}
           volumeMounts:
-            - name: loki-config
-              mountPath: /etc/loki
-              readOnly: true
             - name: loki-config-generated
               mountPath: /var/loki/config
             - name: loki-wal
