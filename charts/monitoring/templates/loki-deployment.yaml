@@ -14,7 +14,7 @@ spec:
       labels:
         app: loki
     spec:
-      serviceAccountName: {{ include "monitoring.serviceAccountName" . | default "loki" }}
+      serviceAccountName: loki-sa
       containers:
         - name: loki
           image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag }}"
