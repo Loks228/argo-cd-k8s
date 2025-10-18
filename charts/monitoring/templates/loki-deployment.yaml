@@ -14,26 +14,48 @@ spec:
       labels:
         app: loki
     spec:
+      serviceAccountName: {{ include "monitoring.serviceAccountName" . | default "loki" }}
       containers:
         - name: loki
-          image: "{{ .Values.loki.image.repository | default "grafana/loki" }}:{{ .Values.loki.image.tag | default "2.8.2" }}"
-          args:
-            - "-config.expand-env=true"
-            - "-config.file=/etc/loki/config.yaml"
+          image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag }}"
+          # Use envsubst to replace ${VAR} placeholders in /etc/loki/config.yaml before starting loki binary
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              # substitute env vars into config and start loki
+              envsubst < /etc/loki/config.yaml > /etc/loki/config.generated.yaml
+              exec /usr/bin/loki -config.file=/etc/loki/config.generated.yaml
           ports:
-            - name: http
-              containerPort: {{ .Values.service.targetPort | default 3100 }}
-          envFrom:
-            - secretRef:
-                name: {{ .Values.secret.name | default "db-credentials" }}
+            - containerPort: {{ .Values.service.targetPort | default 3100 }}
+          env:
+{{- if .Values.commonEnv.secretName }}
+{{- range $i, $key := .Values.commonEnv.envKeys }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.commonEnv.secretName }}
+                  key: {{ $key }}
+{{- end }}
+{{- end }}
           volumeMounts:
-            - name: config
+            - name: loki-config
               mountPath: /etc/loki
-            - name: data
-              mountPath: /var/loki
+              readOnly: true
+            - name: loki-wal
+              mountPath: /var/loki/wal
+            - name: loki-index
+              mountPath: /var/loki/index
+            - name: loki-cache
+              mountPath: /var/loki/cache
       volumes:
-        - name: config
+        - name: loki-config
           configMap:
             name: {{ .Values.configMap.name | default "loki-config" }}
-        - name: data
+        - name: loki-wal
+          emptyDir: {}
+        - name: loki-index
+          emptyDir: {}
+        - name: loki-cache
           emptyDir: {}
