@@ -1,0 +1,26 @@
+# argocd-minemap-monitoring.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: minemap-monitoring
+  namespace: argocd
+spec:
+  # Разрешение для Promtail Helm Chart (устраняет ошибку "repo not permitted")
+  sourceRepos:
+  - https://grafana.github.io/helm-charts
+  - '*' # Также разрешаем ваш собственный репозиторий
+
+  # Разрешаем развертывание в любом Namespace в целевом кластере
+  destinations:
+  - namespace: '*'
+    server: https://kubernetes.default.svc
+    
+  # 🔑 Устранение ошибок ClusterRole/ClusterRoleBinding
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+  # 🔑 Устранение ошибок DaemonSet, Secret, ServiceAccount (namespace resources)
+  namespaceResourceWhitelist:
+  - group: '*' 
+    kind: '*'

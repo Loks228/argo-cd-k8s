@@ -1,0 +1,40 @@
+commonEnv:
+  secretName: db-credentials
+  envKeys:
+    - PGHOST
+    - PGUSER
+    - PGPASSWORD
+    - PGPORT
+    - PGDATABASE
+    - AZURE_STORAGE_ACCOUNT
+    - AZURE_STORAGE_KEY
+    - AzureContainer
+
+services:
+  api-gateway:
+    namespace: api-gateway
+    replicas: 2
+    image: kolyaacr.azurecr.io/api_gateway:latest
+    port: 8000
+    serviceType: LoadBalancer
+
+  auth-service:
+    namespace: auth-service
+    replicas: 2
+    image: kolyaacr.azurecr.io/auth_service:latest
+    port: 8000
+    serviceType: ClusterIP
+
+  markers-service:
+    namespace: markers-service
+    replicas: 2
+    image: kolyaacr.azurecr.io/markers_service:latest
+    port: 8000
+    serviceType: ClusterIP
+
+  user-management:
+    namespace: user-management-service
+    replicas: 2
+    image: kolyaacr.azurecr.io/user_management_service:latest
+    port: 8000
+    serviceType: ClusterIP

@@ -1,0 +1,61 @@
+# charts/monitoring/templates/loki-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: {{ .Release.Namespace }} # Должен быть 'loki'
+  labels:
+    app: loki
+spec:
+  replicas: {{ .Values.loki.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      # Убедитесь, что Secret уже существует (создан вручную или через ESO)
+      serviceAccountName: loki-sa # Если нужен ServiceAccount для доступа к Secret
+      containers:
+        - name: loki
+          image: "{{ .Values.loki.image }}" # например, grafana/loki:2.8.2
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/loki/config.yaml"
+          ports:
+            - name: http-metrics
+              containerPort: {{ .Values.loki.port }}
+              protocol: TCP
+          
+          # 🔑 1. ПРОБРОС ПЕРЕМЕННЫХ ОКРУЖЕНИЯ (СЕКРЕТЫ AZURE)
+          env:
+{{- range $key := .Values.loki.secretEnvKeys }} # Цикл по списку AZURE_STORAGE_ACCOUNT и т.д.
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.loki.secretName }} # Имя общего Secret: db-credentials
+                  key: {{ $key }} # Ключ, например: AZURE_STORAGE_KEY
+{{- end }}
+
+          # 🔑 2. МОНТИРОВАНИЕ CONFIGMAP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+              readOnly: true
+          
+          resources: # Рекомендуется ограничить ресурсы
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+
+      # 🔑 3. ОБЪЯВЛЕНИЕ ТОМОВ (VOLUME)
+      volumes:
+        - name: config
+          configMap:
+            name: loki-config # Имя ConfigMap, который вы создадите

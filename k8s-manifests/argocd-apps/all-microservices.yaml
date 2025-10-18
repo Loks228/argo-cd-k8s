@@ -1,0 +1,31 @@
+# argocd-microservices-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: all-microservices
+  namespace: argocd
+spec:
+  project: minemap-services # Используем новый, менее привилегированный проект
+  source:
+    repoURL: https://github.com/Loks228/argo-cd-k8s.git 
+    targetRevision: HEAD
+    path: charts/services # Путь к вашему универсальному Helm-чарту (который содержит цикл)
+    # Если вы передаете секреты через Helm, используйте 'parameters' или 'values' здесь:
+    # helm:
+    #   parameters:
+    #     - name: commonEnv.PGHOST
+    #       value: '{{ $.secrets.postgres.host }}' # Пример, если используете Vault/External Secrets
+      
+  destination:
+    # Указываем целевой сервер, Argo CD сам найдет нужные Namespace 
+    # через ваш Helm-шаблон, который их создает.
+    server: https://kubernetes.default.svc
+    namespace: api-gateway # Главный Namespace (Argo CD синхронизирует все, что сгенерировано)
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground

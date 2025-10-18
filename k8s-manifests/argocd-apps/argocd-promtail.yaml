@@ -1,0 +1,31 @@
+# argocd-promtail-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: promtail
+  namespace: argocd
+spec:
+  project: minemap-monitoring # Используем привилегированный проект
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 6.17.0 # Используйте нужную вам версию
+    chart: promtail
+    helm:
+      values: |
+        rbac:
+          create: true # Гарантируем, что роли создадутся, так как проект разрешает ClusterRole
+        serviceAccount:
+          create: true
+          name: promtail # Явно указываем имя ServiceAccount
+        config:
+          clients:
+            - url: http://loki.loki.svc.cluster.local:3100/loki/api/v1/push
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: loki
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

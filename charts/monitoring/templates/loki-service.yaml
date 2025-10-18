@@ -1,0 +1,18 @@
+# charts/monitoring/templates/loki-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+  namespace: {{ .Release.Namespace }} # Должен быть 'loki'
+  labels:
+    app: loki
+spec:
+  # 🔑 Ключевое изменение: Используем LoadBalancer для получения публичного IP
+  type: LoadBalancer 
+  ports:
+    - name: http-metrics
+      port: {{ .Values.loki.port }}       # 3100
+      targetPort: {{ .Values.loki.port }} # 3100
+  selector:
+    app: loki

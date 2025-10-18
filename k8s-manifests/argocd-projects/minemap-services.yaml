@@ -1,0 +1,33 @@
+# argocd-minemap-services-project.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: minemap-services
+  namespace: argocd
+spec:
+  # Разрешаем доступ к вашему репозиторию
+  sourceRepos:
+  - https://github.com/Loks228/argo-cd-k8s.git 
+
+  # Разрешаем развертывание в нужные Namespace (ваши NS)
+  destinations:
+  - namespace: 'api-gateway'
+    server: https://kubernetes.default.svc
+  - namespace: 'auth-service'
+    server: https://kubernetes.default.svc
+  - namespace: 'markers-service'
+    server: https://kubernetes.default.svc
+  - namespace: 'user-management-service'
+    server: https://kubernetes.default.svc
+  # ... добавьте остальные NS ...
+    
+  # Разрешаем только ресурсы на уровне Namespace (для безопасности)
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*' # Разрешаем *только* для предотвращения блокировки Argo CD, но лучше всего ограничить.
+              # В данном случае, так как вы не создаете ClusterRole, этот список может быть пустым.
+              
+  # Разрешаем все, что нужно для микросервисов: Deployment, Service, Secret, ConfigMap
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
