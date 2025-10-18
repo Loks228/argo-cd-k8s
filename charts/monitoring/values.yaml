@@ -1,7 +1,9 @@
-secretEnvKeys:
-  - AZURE_STORAGE_ACCOUNT
-  - AZURE_STORAGE_KEY
-  - AZURE_CONTAINER
+commonEnv:
+  secretName: db-credentials
+  envKeys:
+    - AZURE_STORAGE_ACCOUNT
+    - AZURE_STORAGE_KEY
+    - AzureContainer
 
 secret:
   name: db-credentials
