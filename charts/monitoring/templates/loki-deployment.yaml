@@ -32,12 +32,13 @@ spec:
           
           # 🔑 1. ПРОБРОС ПЕРЕМЕННЫХ ОКРУЖЕНИЯ (СЕКРЕТЫ AZURE)
           env:
-{{- range $key := .Values.loki.secretEnvKeys }} # Цикл по списку AZURE_STORAGE_ACCOUNT и т.д.
+{{- range $key := .Values.loki.secretEnvKeys }} 
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.loki.secretName }} # Имя общего Secret: db-credentials
-                  key: {{ $key }} # Ключ, например: AZURE_STORAGE_KEY
+                  # ✅ ИСПОЛЬЗУЙТЕ ЗНАК ДОЛЛАРА ($) для доступа к корневому контексту:
+                  name: {{ $.Values.loki.secretName }} 
+                  key: {{ $key }} 
 {{- end }}
 
           # 🔑 2. МОНТИРОВАНИЕ CONFIGMAP

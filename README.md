@@ -73,7 +73,7 @@ Argo CD — это контроллер, который непрерывно н�
 kubectl apply -f k8s-manifests/argocd-projects/ -n argocd
 Запуск и Релиз Приложений
     2. Затем применяем Applications (инструкции по деплою)
--kubectl apply -f k8s-manifests/argocd-apps/ -n argocd
+kubectl apply -f k8s-manifests/argocd-apps/ -n argocd
 ```
 # 1. Быстрые проверки (команды)
 

@@ -33,7 +33,7 @@ services:
     serviceType: ClusterIP
 
   user-management:
-    namespace: user-management-service
+    namespace: user-management
     replicas: 2
     image: kolyaacr.azurecr.io/user_management_service:latest
     port: 8000

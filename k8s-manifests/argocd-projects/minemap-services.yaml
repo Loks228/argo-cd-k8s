@@ -17,7 +17,7 @@ spec:
     server: https://kubernetes.default.svc
   - namespace: 'markers-service'
     server: https://kubernetes.default.svc
-  - namespace: 'user-management-service'
+  - namespace: 'user-management'
     server: https://kubernetes.default.svc
   # ... добавьте остальные NS ...
     
