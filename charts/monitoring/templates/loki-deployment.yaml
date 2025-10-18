@@ -24,14 +24,32 @@ spec:
             - |
               set -e
               apk add --no-cache gettext
-              mkdir -p /var/loki/config
+              mkdir -p /var/loki/config /var/loki/wal /var/loki/index /var/loki/cache /var/loki/compactor
               envsubst < /etc/loki/config.yaml > /var/loki/config/config.generated.yaml
+          env:
+{{- if .Values.commonEnv.secretName }}
+{{- range $i, $key := .Values.commonEnv.envKeys }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.commonEnv.secretName }}
+                  key: {{ $key }}
+{{- end }}
+{{- end }}
           volumeMounts:
             - name: loki-config
               mountPath: /etc/loki
               readOnly: true
             - name: loki-config-generated
               mountPath: /var/loki/config
+            - name: loki-wal
+              mountPath: /var/loki/wal
+            - name: loki-index
+              mountPath: /var/loki/index
+            - name: loki-cache
+              mountPath: /var/loki/cache
+            - name: loki-compactor
+              mountPath: /var/loki/compactor
       containers:
         - name: loki
           image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag }}"
