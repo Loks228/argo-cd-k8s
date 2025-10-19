@@ -11,15 +11,17 @@ spec:
     targetRevision: 6.17.0 # Используйте нужную вам версию
     chart: promtail
     helm:
-      values: |
+      values: |-
         rbac:
-          create: true # Гарантируем, что роли создадутся, так как проект разрешает ClusterRole
+          create: true
         serviceAccount:
           create: true
-          name: promtail # Явно указываем имя ServiceAccount
+          name: promtail
         config:
           clients:
             - url: http://loki.loki.svc.cluster.local:3100/loki/api/v1/push
+              headers:
+                X-Scope-OrgID: "default"
   destination:
     server: https://kubernetes.default.svc
     namespace: loki
