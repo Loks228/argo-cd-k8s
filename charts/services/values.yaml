@@ -12,12 +12,14 @@ commonEnv:
 
 services:
   api-gateway:
+    name: api-gateway
     namespace: api-gateway
     replicas: 2
     image: kolyaacr.azurecr.io/api_gateway:latest
     port: 8000
     targetPort: 8000
     serviceType: LoadBalancer
+    host: api.minemap.ua
 
   auth-service:
     namespace: auth-service

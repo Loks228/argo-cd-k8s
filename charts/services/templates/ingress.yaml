@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress
+  namespace: {{ .Values.services.api-gateway.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod # если используешь cert-manager для TLS
+spec:
+  tls:
+  - hosts:
+      - {{ .Values.services.api-gateway.host | default "api.minemap.ua" }}
+    secretName: api-gateway-tls
+  rules:
+  - host: {{ .Values.services.api-gateway.host | default "api.minemap.ua" }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+        service:
+        name: {{ .Values.services.api-gateway.name | default "api-gateway" }}
+            port:
+              number: {{ .Values.services.api-gateway.port | default 8000 }}

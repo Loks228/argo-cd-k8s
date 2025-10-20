@@ -21,7 +21,7 @@ spec:
         - name: {{ $name }}
           image: {{ $svc.image }}
           ports:
-            - containerPort: {{ $svc.port }}
+            - containerPort: {{ $svc.port | default 8000 }}
           env:
 {{- range $key := $.Values.commonEnv.envKeys }}
             - name: {{ $key }}
