@@ -16,6 +16,7 @@ services:
     replicas: 2
     image: kolyaacr.azurecr.io/api_gateway:latest
     port: 8000
+    targetPort: 8000
     serviceType: LoadBalancer
 
   auth-service:
@@ -23,6 +24,7 @@ services:
     replicas: 2
     image: kolyaacr.azurecr.io/auth_service:latest
     port: 8000
+    targetPort: 8000
     serviceType: ClusterIP
 
   markers-service:
@@ -30,6 +32,7 @@ services:
     replicas: 2
     image: kolyaacr.azurecr.io/markers_service:latest
     port: 8000
+    targetPort: 8000
     serviceType: ClusterIP
 
   user-management:
@@ -37,4 +40,5 @@ services:
     replicas: 2
     image: kolyaacr.azurecr.io/user_management_service:latest
     port: 8000
+    targetPort: 8000
     serviceType: ClusterIP
