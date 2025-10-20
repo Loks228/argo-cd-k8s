@@ -20,6 +20,7 @@ services:
     targetPort: 8000
     serviceType: LoadBalancer
     host: api.minemap.ua
+    secretName: api-gateway-tls
 
   auth-service:
     namespace: auth-service
