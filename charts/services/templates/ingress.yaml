@@ -5,20 +5,21 @@ metadata:
   namespace: api-gateway
   annotations:
     kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod # если используешь cert-manager для TLS
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
-    hosts: api.minemap.ua
+    - hosts:
+        - api.minemap.ua
       secretName: api-gateway-tls
 
   rules:
-    host: "api.minemap.ua"
-    http:
-      paths:
-        path: /
-        pathType: Prefix
-        backend:
-        service:
-        name: "api-gateway" 
-            port:
-              number: 8000
+    - host: api.minemap.ua
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 8000
