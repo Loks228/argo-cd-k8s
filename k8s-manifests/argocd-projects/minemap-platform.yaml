@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: minemap-platform
+  namespace: argocd
+spec:
+  description: 'Core infrastructure components for MineMap.UA (Ingress, Cert-Manager, etc.)'
+  
+  sourceRepos:
+  - '*' 
+
+  # ИСПРАВЛЕННАЯ СЕКЦИЯ DESTINATIONS
+  destinations:
+  - namespace: ingress-nginx
+    server: https://kubernetes.default.svc
+  - namespace: cert-manager
+    server: https://kubernetes.default.svc
+  - namespace: api-gateway 
+    server: https://kubernetes.default.svc
+  - namespace: kube-system # <-- 🚨 НУЖНО ДОБАВИТЬ ЭТОТ
+    server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*' 
+
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+  roles: []

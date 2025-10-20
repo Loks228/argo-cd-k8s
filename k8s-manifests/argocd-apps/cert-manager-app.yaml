@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: minemap-platform # Или ваше имя проекта
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.14.4
+    helm:
+      values: |
+        installCRDs: true 
+        extraObjects:
+          # ... ваш ClusterIssuer ...
+          
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+    
+  # 🚨 КЛЮЧЕВОЙ МОМЕНТ: Добавляем игнорирование
+  ignoreDifferences:
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager-startupapicheck:create-cert
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager-startupapicheck:create-cert
+    namespace: cert-manager
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      # Оставляем только нужные, убирая конфликтующие Replace/Prune

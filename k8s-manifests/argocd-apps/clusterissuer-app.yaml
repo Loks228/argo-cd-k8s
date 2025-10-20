@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: letsencrypt-prod-issuer
+  namespace: argocd
+spec:
+  project: minemap-platform
+  source:
+    # ⚠️ ВАЖНО: Замените 'ВАШ_GIT_РЕПОЗИТОРИЙ' на URL вашего Git-репозитория
+    repoURL: https://github.com/Loks228/argo-cd-k8s.git  
+    targetRevision: HEAD # Или укажите конкретную ветку/тег
+    path: k8s-manifests/clusterissuer  # ⚠️ Укажите путь к папке, где лежит clusterissuer.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    # ClusterIssuer — ресурс уровня кластера, namespace здесь не важен, но указывается для формальности
+    namespace: cert-manager 
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - Validate=true
