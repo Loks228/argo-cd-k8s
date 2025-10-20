@@ -11,6 +11,6 @@ spec:
   type: {{ $svc.serviceType | default "ClusterIP" }}
   ports:
     - protocol: TCP
-      port: {{ $svc.port | default 80 }}
-      targetPort: {{ $svc.port | default 80 }}
+      port: {{ $svc.port | default 8000 }}
+      targetPort: {{ $svc.targetPort | default 8000 }}
 {{- end }}
