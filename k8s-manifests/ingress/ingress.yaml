@@ -9,11 +9,11 @@ metadata:
 spec:
   tls:
     - hosts:
-        - api.minemap.ua
+        - minemap.pp.ua
       secretName: api-gateway-tls
 
   rules:
-    - host: api.minemap.ua
+    - host: minemap.pp.ua
       http:
         paths:
           - path: /
