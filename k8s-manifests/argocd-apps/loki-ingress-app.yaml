@@ -1,24 +1,24 @@
-# k8s-manifests/argocd-apps/api-gateway-ingress-app.yaml
+# k8s-manifests/argocd-apps/loki-ingress-app.yaml
 
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: api-gateway-ingress
+  name: loki-ingress
   namespace: argocd
 spec:
   # 🚨 ИСПОЛЬЗУЕМ ВАШ ПРОЕКТ ПЛАТФОРМЫ
-  project: minemap-platform 
+  project: minemap-monitoring 
   source:
     # ⚠️ УКАЖИТЕ ВАШ РЕПОЗИТОРИЙ
     repoURL: https://github.com/Loks228/argo-cd-k8s.git 
     targetRevision: HEAD 
     # 🚨 ПУТЬ К ПАПКЕ, ГДЕ ЛЕЖИТ ingress.yaml
-    path: k8s-manifests/ingress/api-gateway/
+    path: k8s-manifests/ingress/loki/ingress_loki.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    # 🚨 ДЕПЛОЙ ТОЛЬКО В API-GATEWAY NAMESPACE
-    namespace: api-gateway 
+    # 🚨 ДЕПЛОЙ ТОЛЬКО В LOKI NAMESPACE
+    namespace: loki 
     
   syncPolicy:
     automated:
