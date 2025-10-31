@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-exporter
+  namespace: argocd
+spec:
+  project: minemap-monitoring
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 4.29.0
+    chart: prometheus-node-exporter
+    helm:
+      values: |-
+        rbac:
+          create: true
+        serviceAccount:
+          create: true
+          name: node-exporter
+        service:
+          type: ClusterIP
+          port: 9100
+        prometheus:
+          monitor:
+            enabled: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

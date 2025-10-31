@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-exporter-ingress
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+    - hosts:
+        - node-exporter-minemap.pp.ua
+      secretName: node-exporter-tls
+
+  rules:
+    - host: node-exporter-minemap.pp.ua
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-node-exporter
+                port:
+                  number: 9100

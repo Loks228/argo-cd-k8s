@@ -13,7 +13,7 @@ spec:
     repoURL: https://github.com/Loks228/argo-cd-k8s.git 
     targetRevision: HEAD 
     # 🚨 ПУТЬ К ПАПКЕ, ГДЕ ЛЕЖИТ ingress.yaml
-    path: k8s-manifests/ingress/loki/ingress_loki.yaml
+    path: k8s-manifests/ingress/loki/
 
   destination:
     server: https://kubernetes.default.svc
