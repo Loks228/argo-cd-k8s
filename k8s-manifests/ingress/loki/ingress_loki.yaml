@@ -16,7 +16,7 @@ spec:
     - host: loki-minemap.pp.ua
       http:
         paths:
-          - path: /
+          - path: /ready
             pathType: Prefix
             backend:
               service:
