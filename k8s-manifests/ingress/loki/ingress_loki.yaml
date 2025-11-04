@@ -4,6 +4,14 @@ metadata:
   name: loki-ingress
   namespace: loki
   annotations:
+    # 1. Шлях для Health Check (ви правильно додали)
+    appgw.ingress.kubernetes.io/probe-path: "/ready"
+    
+    # 🛑 2. КРИТИЧНО ВАЖЛИВО: Каже AAG використовувати HTTP для бэкенда Loki
+    appgw.ingress.kubernetes.io/backend-protocol: "Http" 
+    
+    # 3. Рекомендується: Довший таймаут, щоб не отримати 502 при затримках
+    appgw.ingress.kubernetes.io/request-timeout: "120"
     kubernetes.io/ingress.class: azure/application-gateway
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
@@ -16,7 +24,7 @@ spec:
     - host: loki-minemap.pp.ua
       http:
         paths:
-          - path: /ready
+          - path: /
             pathType: Prefix
             backend:
               service:
