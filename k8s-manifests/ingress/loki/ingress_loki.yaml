@@ -30,4 +30,4 @@ spec:
               service:
                 name: loki
                 port:
-                  number: 8000
+                  number: 3100
