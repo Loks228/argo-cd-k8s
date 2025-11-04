@@ -5,7 +5,7 @@ metadata:
   namespace: loki
   annotations:
     # 1. Шлях для Health Check (ви правильно додали)
-    appgw.ingress.kubernetes.io/probe-path: "/ready"
+    appgw.ingress.kubernetes.io/probe-path: "/metrics"
     
     # 🛑 2. КРИТИЧНО ВАЖЛИВО: Каже AAG використовувати HTTP для бэкенда Loki
     appgw.ingress.kubernetes.io/backend-protocol: "Http" 
