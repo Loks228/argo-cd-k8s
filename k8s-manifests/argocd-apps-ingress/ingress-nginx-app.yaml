@@ -14,12 +14,19 @@ spec:
 
     helm:
       values: |
-
         controller:
           replicaCount: 2
+          ingressClass: nginx
+          ingressClassByName: true
           service:
             type: LoadBalancer
             externalTrafficPolicy: Local
+          # Явно создаем IngressClass
+          ingressClassResource:
+            name: nginx
+            enabled: true
+            default: true
+            controllerValue: "k8s.io/ingress-nginx"
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
