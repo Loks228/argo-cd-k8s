@@ -29,7 +29,7 @@ services:
   auth-service:
     namespace: auth-service
     replicas: 2
-    image: kolyaacr.azurecr.io/auth_service:1.2.10
+    image: kolyaacr.azurecr.io/auth_service:1.2.11
     port: 8000
     targetPort: 8000
     serviceType: ClusterIP
