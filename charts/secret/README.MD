@@ -2,11 +2,12 @@
 cd ~/Documents/GitHub/MineMap.UA/my-code-k8s
 
 # lint chart секретов
-helm lint ./secret-chart
-
+helm lint ./charts/secret
+helm lint ./charts/secret
 # посмотреть что будет создано (рендер)
-helm template secrets-manual ./secret-chart -f secret-chart/values-secret.yaml > rendered-secrets.yaml
+helm template secrets-manual ./charts/secret -f ./charts/secret/values-secret.yaml > rendered-secrets.yaml
 less rendered-secrets.yaml
+
 
 # A) Удалить старые секреты (разрушительно):
 for ns in api-gateway auth-service markers-service user-management; do

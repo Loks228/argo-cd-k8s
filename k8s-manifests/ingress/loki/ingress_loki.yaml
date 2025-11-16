@@ -12,7 +12,7 @@ metadata:
     
     # 3. Рекомендується: Довший таймаут, щоб не отримати 502 при затримках
     appgw.ingress.kubernetes.io/request-timeout: "120"
-    kubernetes.io/ingress.class: azure/application-gateway
+    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
