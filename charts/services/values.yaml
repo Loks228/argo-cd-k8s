@@ -9,13 +9,17 @@ commonEnv:
     - AZURE_STORAGE_ACCOUNT
     - AZURE_STORAGE_KEY
     - AzureContainer
-
+    - GOOGLE_CLIENT_ID
+    - GOOGLE_CLIENT_SECRET
+    - GITHUB_CLIENT_ID
+    - GITHUB_CLIENT_SECRET
+    - BASE_URL
 services:
   api-gateway:
     name: api-gateway
     namespace: api-gateway
     replicas: 2
-    image: kolyaacr.azurecr.io/api_gateway:latest
+    image: kolyaacr.azurecr.io/api_gateway:1.2.8
     port: 8000
     targetPort: 8000
     serviceType: LoadBalancer
@@ -25,7 +29,7 @@ services:
   auth-service:
     namespace: auth-service
     replicas: 2
-    image: kolyaacr.azurecr.io/auth_service:latest
+    image: kolyaacr.azurecr.io/auth_service:1.2.7
     port: 8000
     targetPort: 8000
     serviceType: ClusterIP
@@ -33,7 +37,7 @@ services:
   markers-service:
     namespace: markers-service
     replicas: 2
-    image: kolyaacr.azurecr.io/markers_service:latest
+    image: kolyaacr.azurecr.io/markers_service:1.1.7
     port: 8000
     targetPort: 8000
     serviceType: ClusterIP
@@ -41,7 +45,7 @@ services:
   user-management:
     namespace: user-management
     replicas: 2
-    image: kolyaacr.azurecr.io/user_management_service:latest
+    image: kolyaacr.azurecr.io/user_management_service:1.1.7
     port: 8000
     targetPort: 8000
     serviceType: ClusterIP
