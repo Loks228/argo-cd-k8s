@@ -19,7 +19,7 @@ services:
     name: api-gateway
     namespace: api-gateway
     replicas: 2
-    image: kolyaacr.azurecr.io/api_gateway:1.2.9
+    image: kolyaacr.azurecr.io/api_gateway:1.2.10
     port: 8000
     targetPort: 8000
     serviceType: LoadBalancer
