@@ -10,6 +10,11 @@ metadata:
     # Отключаем кэширование для всех ответов
     nginx.ingress.kubernetes.io/proxy-no-cache: "1"
     nginx.ingress.kubernetes.io/proxy-cache: "off"
+    # Сохраняем все headers от backend
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Cache-Control: no-cache, no-store, must-revalidate";
+      more_set_headers "Pragma: no-cache";
+      more_set_headers "Expires: 0";
 spec:
   ingressClassName: nginx
   tls:
