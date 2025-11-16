@@ -7,6 +7,9 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Отключаем кэширование для всех ответов
+    nginx.ingress.kubernetes.io/proxy-no-cache: "1"
+    nginx.ingress.kubernetes.io/proxy-cache: "off"
 spec:
   ingressClassName: nginx
   tls:
