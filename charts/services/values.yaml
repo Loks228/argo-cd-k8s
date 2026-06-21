@@ -6,9 +6,6 @@ commonEnv:
     - PGPASSWORD
     - PGPORT
     - PGDATABASE
-    - AZURE_STORAGE_ACCOUNT
-    - AZURE_STORAGE_KEY
-    - AzureContainer
     - GOOGLE_CLIENT_ID
     - GOOGLE_CLIENT_SECRET
     - GITHUB_CLIENT_ID
@@ -20,7 +17,7 @@ services:
     name: api-gateway
     namespace: api-gateway
     replicas: 2
-    image: kolyaacr.azurecr.io/api_gateway:1.2.11
+    image: docker.io/api_gateway:1.2.11
     port: 8000
     targetPort: 8000
     serviceType: LoadBalancer
@@ -30,23 +27,23 @@ services:
   auth-service:
     namespace: auth-service
     replicas: 2
-    image: kolyaacr.azurecr.io/auth_service:1.2.12
+    image: docker.io/auth_service:1.2.12
     port: 8000
-    targetPort: 8000
+    targetPort: 8001
     serviceType: ClusterIP
 
-  markers-service:
-    namespace: markers-service
+  booking-service:
+    namespace: booking-service
     replicas: 2
-    image: kolyaacr.azurecr.io/markers_service:1.1.7
+    image: docker.io/booking_service:1.1.7
     port: 8000
-    targetPort: 8000
+    targetPort: 8002
     serviceType: ClusterIP
 
-  user-management:
-    namespace: user-management
+  admin-service:
+    namespace: admin-service
     replicas: 2
-    image: kolyaacr.azurecr.io/user_management_service:1.1.7
+    image: docker.io/admin_service:1.1.7
     port: 8000
-    targetPort: 8000
+    targetPort: 8004
     serviceType: ClusterIP

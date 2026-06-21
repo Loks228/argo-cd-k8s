@@ -1,13 +1,13 @@
-# argocd-minemap-services-project.yaml
+# argocd-ontime-services-project.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: minemap-services
+  name: ontime-services
   namespace: argocd
 spec:
   # Разрешаем доступ к вашему репозиторию
   sourceRepos:
-  - https://github.com/Loks228/argo-cd-k8s.git 
+  - https://github.com/Loks228/argo-cd-k3s.git 
 
   # Разрешаем развертывание в нужные Namespace (ваши NS)
   destinations:
@@ -15,9 +15,9 @@ spec:
     server: https://kubernetes.default.svc
   - namespace: 'auth-service'
     server: https://kubernetes.default.svc
-  - namespace: 'markers-service'
+  - namespace: 'booking-service'
     server: https://kubernetes.default.svc
-  - namespace: 'user-management'
+  - namespace: 'admin-service'
     server: https://kubernetes.default.svc
   # ... добавьте остальные NS ...
     

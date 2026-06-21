@@ -1,8 +1,8 @@
-# argocd-minemap-monitoring.yaml
+# argocd-ontime-monitoring.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: minemap-monitoring
+  name: ontime-monitoring
   namespace: argocd
 spec:
   # Разрешение для Promtail Helm Chart (устраняет ошибку "repo not permitted")

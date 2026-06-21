@@ -12,11 +12,11 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - minemap.pp.ua
+        -  ontimedent.online
       secretName: api-gateway-tls
 
   rules:
-    - host: minemap.pp.ua
+    - host:  ontimedent.online
       http:
         paths:
           - path: /

@@ -1,19 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: minemap-platform
+  name: ontime-platform
   namespace: argocd
 spec:
-  description: 'Core infrastructure components for MineMap.UA (Ingress, Cert-Manager, etc.)'
+  description: 'Core infrastructure components for OnTime.denta (Ingress, Cert-Manager, etc.)'
   
   sourceRepos:
   - '*' 
 
   # ИСПРАВЛЕННАЯ СЕКЦИЯ DESTINATIONS
   destinations:
-  - namespace: ingress-nginx
-    server: https://kubernetes.default.svc
-  - namespace: cert-manager
     server: https://kubernetes.default.svc
   - namespace: api-gateway 
     server: https://kubernetes.default.svc

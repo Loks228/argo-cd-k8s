@@ -5,10 +5,10 @@ metadata:
   name: loki
   namespace: argocd
 spec:
-  project: minemap-monitoring
+  project: ontime-monitoring
   source:
     path: charts/monitoring
-    repoURL: https://github.com/Loks228/argo-cd-k8s.git 
+    repoURL: https://github.com/Loks228/argo-cd-k3s.git 
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc

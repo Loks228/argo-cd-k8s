@@ -5,7 +5,7 @@ metadata:
   name: promtail
   namespace: argocd
 spec:
-  project: minemap-monitoring # Используем привилегированный проект
+  project: ontime-monitoring # Используем привилегированный проект
   source:
     repoURL: https://grafana.github.io/helm-charts
     targetRevision: 6.17.0 # Используйте нужную вам версию
